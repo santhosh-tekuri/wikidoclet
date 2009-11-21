@@ -1,0 +1,16 @@
+<project name="wikidoclet" default="all">
+    <target name="all">
+        <delete dir="classes"/>
+        <mkdir dir="classes"/>
+        <javac srcdir="src" destdir="classes" debug="true" debuglevel="lines,vars,source"/>
+        <jar jarfile="wikidoclet.1.0.4.jar">
+            <fileset dir="classes"/>
+            <fileset dir="src" excludes="**/*.java"/>
+        </jar>
+
+        <delete dir="docs/api"/>
+        <mkdir dir="docs/api"/>
+        <javadoc sourcepath="src" destdir="docs/api"
+                 doclet="wikidoclet.WikiDoclet" docletpath="wikidoclet.1.0.4.jar"/>
+    </target>
+</project>
