@@ -1,0 +1,117 @@
+<body>
+
+ This is an extension of the {@link wikidoclet.standard.Standard} doclet
+ provided with the JDK. It adds support for what I am calling WIKI formatting.
+ What this means is that your JavaDoc can now be formatted using text rules that
+ are easier on the eyes than html embedded in JavaDoc. For example, to put
+ emphasis on a piece of text you surround it with *stars*. Italics with
+ _underscores_. When the doclet is run to produce JavaDoc these rules are
+ evaluated and html substitutions are made. This formatting should make reading
+ java source code much easier since it will no longer be cluttered with HTML
+ tags. This is especially true for bulleted lists and for tables. HTML is
+ preserved still though, so you can mix and match as you like.
+
+ The text formatting rules were taken from rules defined by
+ [[http://twiki.org/cgi-bin/view/TWiki/TextFormattingRules][TWIKI]]
+ and work the same for the most part.
+
+ *Formatting Notes*:
+
+    * You no longer need to embed =p= tags into source source code. WIKI formatting
+      replaces blank lines with =p= tags.
+
+    * Bulleted and numbered lists may contain list items that span multiple
+      lines as long as the indent level of the text is >= the current indent
+      level. Also, you may include newlines between list items.
+
+    * The tables created by the table rule have a css class of "wikitable"
+      so that the style can be manipulated.
+
+    * The =pre/verbatim= tags will escape the html embedded with them. Example:
+        <pre>
+            <HTML><BODY>&amp;&amp;&amp;</BODY></HTML>
+        </pre>
+
+    * =pre/verbatim= tags must be on a line by themselves.
+
+ The only change made to the standard doclet tags was in
+ {@link wikidoclet.standard.HtmlStandardWriter}. The commentTagsToString method
+ was changed to perform the WIKI replacements before returning. This class had to
+ be changed since all of the other Writers use it as a base class for
+ formatting.
+
+ All of the work takes place in {@link WikiFormatter}. The Doclet API proved to
+ be *FAR* less extendable than I would have liked. I ended up copying the source
+ of the standard doclet into this package so I could modify the {@link
+ wikidoclet.standard.HtmlStandardWriter}.
+
+Below are test strings that should be formatted according to wiki rules.
+--------------------------------------------------------------------------
+Test normal
+Test newline
+
+Test *bold*
+Test <a href="http://www.google.com/" target="_new">href</a>
+Test _Italic_
+Test __BoldItalic__
+Test ---+ H1
+Test ---++++ H4
+Test =fixed font "with quotes"=
+Test ==bold fixed font==
+Test horiz line ---------
+Test bullets
+
+   * bullet1
+      * bullet2
+      * bullet3
+         * bullet4
+           more bullet4 text
+
+           again more bullet4 text
+
+       * bullet5
+   * bullet6
+   * bullet7
+   	* tabbed bullet
+   * bullet8 with *bold*
+
+Test bullets with different tab size
+
+    * bullet1
+        * bullet2
+    * bullet3
+    	* bullet4 with tab
+
+Test tabbed bullets
+
+	* bullet1
+		* bullet2
+	* bullet3
+
+Test numbered bullets
+
+   1. bullet1
+      1. bullet2
+   1. bullet3
+   1. bullet4
+   1. bullet5 with *bold*
+
+Test table
+
+  |1|2|3|
+  |4|5|6|
+
+  | *h1* | *h2* | *h3* |
+  | 1 | 2 | 3 |
+
+  |  header1 | header2 | header3  |
+  |  1 | 2 | 3  |
+
+<verbatim>
+foreach item (items) {
+   do();
+   print("<br>&&<br>");
+}
+</verbatim>
+
+</body>
